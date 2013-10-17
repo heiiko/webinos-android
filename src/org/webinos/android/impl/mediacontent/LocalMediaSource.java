@@ -34,6 +34,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.media.MediaMetadataRetriever;
 
 public class LocalMediaSource extends MediaSource {
 
@@ -213,12 +214,13 @@ public class LocalMediaSource extends MediaSource {
 
     private MediaItemSuccessCallback successCallback;
     private MediaContentErrorCallback errorCallback;
+    private MediaMetadataRetriever mmr;
     private String folderId;
     private AbstractFilter filter;
     private SortMode sortMode;
     private long count;
     private long offset;
-
+    
     public FindItemsOperation(MediaItemSuccessCallback successCallback,
         MediaContentErrorCallback errorCallback, String folderId,
         AbstractFilter filter, SortMode sortMode, long count, long offset) {
@@ -229,6 +231,7 @@ public class LocalMediaSource extends MediaSource {
       this.sortMode = sortMode;
       this.count = count;
       this.offset = offset;
+      this.mmr = new MediaMetadataRetriever();
     }
 
     @Override
@@ -304,6 +307,18 @@ public class LocalMediaSource extends MediaSource {
           String mediaType = (String) valueSet.get("type");
 
           if (MediaItem.MEDIATYPE_AUDIO.equals(mediaType)) {
+            if(valueSet.containsKey("itemURI")) {
+            	String itemURI = (String) valueSet.get("itemURI");
+            	
+            	mmr.setDataSource(itemURI);
+            	String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+            	String artistName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+            	String[] artistArray = new String[1];
+            	artistArray[0] = artistName;
+            	
+            	valueSet.put("album", albumName);
+            	valueSet.put("artists", artistArray);
+            }
             mediaItems.add(new MediaAudio(valueSet));
           } else if (MediaItem.MEDIATYPE_VIDEO.equals(mediaType)) {
             mediaItems.add(new MediaVideo(valueSet));
