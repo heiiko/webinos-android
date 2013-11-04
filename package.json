@@ -7,10 +7,10 @@
   "bugs": "http://jira.webinos.org/browse/WP",
   "repository": {
     "type": "git",
-    "url": "git://github.com/webinos/webinos-android.git"
+    "url": "git://github.com/heiiko/webinos-android.git"
   },
   "dependencies": {
-    "webinos-pzp": "git://github.com/webinos/webinos-pzp.git",
-    "webinos-widget": "git://github.com/webinos/webinos-widget.git"
+    "webinos-pzp": "git://github.com/heiiko/webinos-pzp.git",
+    "webinos-widget": "git://github.com/heiiko/webinos-widget.git"
   }
 }
